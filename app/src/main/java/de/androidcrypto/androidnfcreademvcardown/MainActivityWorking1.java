@@ -1,7 +1,5 @@
 package de.androidcrypto.androidnfcreademvcardown;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -11,10 +9,12 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.IOException;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements NfcAdapter.ReaderCallback {
+public class MainActivityWorking1 extends AppCompatActivity implements NfcAdapter.ReaderCallback {
 
     TextView nfcaContent;
     private NfcAdapter mNfcAdapter;
