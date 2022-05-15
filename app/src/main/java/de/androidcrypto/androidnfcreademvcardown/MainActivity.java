@@ -149,8 +149,8 @@ private static readonly byte[] SELECT_OK_SW = { (byte)0x90, (byte)0x00 };
             String VisaCardAID = "A0000000031010"; // not tested yet
             //byte[] command = selectApdu(hexStringToByteArray(MasterCardAID));
             //byte[] command = selectApdu(hexStringToByteArray(MaestroCardAID));
-            //byte[] command = selectApdu(hexStringToByteArray(MShortCardAID));
-            byte[] command = selectApdu(hexStringToByteArray(VisaCardAID));
+            byte[] command = selectApdu(hexStringToByteArray(MShortCardAID));
+            //byte[] command = selectApdu(hexStringToByteArray(VisaCardAID));
             response = isoDep.transceive(command);
             //response = isoDep.Transceive(hexStringToByteArray("00A404007A000000004101000"));
             //idContentString = idContentString + "\n" + "response to MasterCard AID with selectApdu";
@@ -159,6 +159,81 @@ private static readonly byte[] SELECT_OK_SW = { (byte)0x90, (byte)0x00 };
             idContentString = idContentString + "\n" + "response length: " + response.length;
             idContentString = idContentString + "\n" + "response: " + bytesToHex(response);
             idContentString = idContentString + "\n" + "d:" + new String((response));
+            // see this online decoder to get the content:
+            // https://emvlab.org/tlvutils/
+            System.out.println("response to VisaCard AID with selectApdu");
+            System.out.println(bytesToHex(response));
+            System.out.println("********* END **********");
+            // visa debit hvb white
+            // 6f5a8407a0000000031010a54f500e48564220566973612044656269748701015f2d086465656e667269749f38189f66049f02069f03069f1a0295055f2a029a039c019f3704bf0c139f5a0531097802769f0a0800010501000000009000
+            /* structure:
+6F File Control Information (FCI) Template
+ 	84 Dedicated File (DF) Name
+ 	 	A0000000031010
+ 	A5 File Control Information (FCI) Proprietary Template
+ 	 	50 Application Label
+ 	 	 	H V B V i s a D e b i t
+ 	 	87 Application Priority Indicator
+ 	 	 	01
+ 	 	5F2D Language Preference
+ 	 	 	d e e n f r i t
+ 	 	9F38 Processing Options Data Object List (PDOL)
+ 	 	 	9F66049F02069F03069F1A0295055F2A029A039C019F3704
+ 	 	BF0C File Control Information (FCI) Issuer Discretionary Data
+ 	 	 	9F5A Unknown tag
+ 	 	 	 	3109780276
+ 	 	 	9F0A Unknown tag
+ 	 	 	 	0001050100000000
+90 Issuer Public Key Certificate
+             */
+            // aab mastercard debit
+            // 6f528407a0000000041010a54750104465626974204d6173746572436172649f12104465626974204d6173746572436172648701019f1101015f2d046465656ebf0c119f0a04000101019f6e07028000003030009000
+/*
+6F File Control Information (FCI) Template
+ 	84 Dedicated File (DF) Name
+ 	 	A0000000041010
+ 	A5 File Control Information (FCI) Proprietary Template
+ 	 	50 Application Label
+ 	 	 	D e b i t M a s t e r C a r d
+ 	 	9F12 Application Preferred Name
+ 	 	 	D e b i t M a s t e r C a r d
+ 	 	87 Application Priority Indicator
+ 	 	 	01
+ 	 	9F11 Issuer Code Table Index
+ 	 	 	01
+ 	 	5F2D Language Preference
+ 	 	 	d e e n
+ 	 	BF0C File Control Information (FCI) Issuer Discretionary Data
+ 	 	 	9F0A Unknown tag
+ 	 	 	 	00010101
+ 	 	 	9F6E Unknown tag
+ 	 	 	 	02800000303000
+90 Issuer Public Key Certificate
+ */
+/* tag excempt from https://emvlab.org/emvtags/all/
+5A	Application Primary Account Number (PAN)	Valid cardholder account number
+94	Application File Locator (AFL)	Indicates the location (SFI, range of records) of the AEFs related to a given application
+4F	Application Identifier (AID) – card	Identifies the application as described in ISO/IEC 7816-5
+50	Application Label	Mnemonic associated with the AID according to ISO/IEC 7816-5
+5F20	Cardholder Name	Indicates cardholder name according to ISO 7813
+9F0B	Cardholder Name Extended	Indicates the whole cardholder name when greater than 26 characters using the same coding convention as in ISO 7813
+8E	Cardholder Verification Method (CVM) List	Identifies a method of verification of the cardholder supported by the application
+83	Command Template	Identifies the data field of a command message
+84	Dedicated File (DF) Name	Identifies the name of the DF as described in ISO/IEC 7816-4
+9D	Directory Definition File (DDF) Name	Identifies the name of a DF associated with a directory
+A5	File Control Information (FCI) Proprietary Template	Identifies the data object proprietary to this specification in the FCI template according to ISO/IEC 7816-4
+6F	File Control Information (FCI) Template	Identifies the FCI template according to ISO/IEC 7816-4
+9F1E	Interface Device (IFD) Serial Number	Unique and permanent serial number assigned to the IFD by the manufacturer
+9F13	Last Online Application Transaction Counter (ATC) Register	ATC value of the last transaction that went online
+9F17	Personal Identification Number (PIN) Try Counter	Number of PIN tries remaining
+9F38	Processing Options Data Object List (PDOL)	Contains a list of terminal resident data objects (tags and lengths) needed by the ICC in processing the GET PROCESSING OPTIONS command
+9F1F	Track 1 Discretionary Data	Discretionary part of track 1 according to ISO/IEC 7813
+9F20	Track 2 Discretionary Data	Discretionary part of track 2 according to ISO/IEC 7813
+57	Track 2 Equivalent Data	Contains the data elements of track 2 according to ISO/IEC 7813, excluding start sentinel, end sentinel, and Longitudinal Redundancy Check (LRC), as follows: Primary Account Number (n, var. up to 19) Field Separator (Hex 'D') (b) Expiration Date (YYMM) (n 4) Service Code (n 3) Discretionary Data (defined by individual payment systems) (n, var.) Pad with one Hex 'F' if needed to ensure whole bytes (b)
+9A	Transaction Date	Local date that the transaction was authorised
+99	Transaction Personal Identification Number (PIN) Data	Data entered by the cardholder for the purpose of the PIN verification
+ */
+
 
             // brute force to read data
             byte[] result;
