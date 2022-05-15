@@ -233,6 +233,15 @@ A5	File Control Information (FCI) Proprietary Template	Identifies the data objec
 9A	Transaction Date	Local date that the transaction was authorised
 99	Transaction Personal Identification Number (PIN) Data	Data entered by the cardholder for the purpose of the PIN verification
  */
+// https://www.openscdp.org/scripts/tutorial/emv/
+// https://www.openscdp.org/scripts/tutorial/emv/reademv.html
+// https://www.openscdp.org/scripts/tutorial/emv/applicationselection.html
+// https://stackoverflow.com/questions/37394699/unable-to-identify-afl-on-a-smart-card/37396191#37396191
+// https://stackoverflow.com/questions/38998065/how-to-read-response-from-a-credit-card-over-nfc
+// https://stackoverflow.com/a/37396191/2425802
+// https://stackoverflow.com/questions/283251/how-do-i-read-the-pan-from-an-emv-smartcard-from-java
+// https://stackoverflow.com/questions/15059580/reading-emv-card-using-ppse-and-not-pse
+
 
 
             // brute force to read data
